@@ -96,27 +96,27 @@ vsearch -derep_fulllength all_sequences.filtered.fa -output all_sequences.filter
 
 ```rmarkdown
 vsearch -sortbysize all_sequences.filtered.uniques.fa -output all_sequences.filtered.uniques.sort.fa -minsize 2
-````
+```
 
 ## Step 5: Chemira checking
 `-minsize` specifies the minimum abundance. The default is 8, but for higher sensitivity, reducing `-minsize` to 4 is acceptable.
 
 All noisy sequences (with low-abundance) are mapped to a ZOTU by `-zotus` option.
 
-```rmardown
+```rmarkdown
 usearch -unoise3 all_sequences.filtered.uniques.sort.fa -zotus *all_sequences.otus100.fa -minsize 4
 ```
 
 Then, sort sequences by length
 
-```rmardown
+```rmarkdown
 usearch -sortbylength all_sequences.otus100.fa -fastaout all_sequences.otus100.sorted.fa
 ```
 
 ## Step 6: OTUs clustering
 For Eukaryota is better to use 98% level for clustering with`-id`option. (97% for Bacteria and Archaea).
 
-```rmardown
+```rmarkdown
 usearch -cluster_smallmem all_sequences.otus100.sorted.fa -id 0.98 -centroids all_sequences.otu.fasta -relabel OTU_
 ```
 
@@ -163,7 +163,7 @@ cat *.uc > all_sequences.uc
 
 Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html) to transform `.uc`to otu table 
 
-```rmardown
+```rmarkdown
 python uc2otutab.py all_sequences.uc > all_sequences.otumap
 ```
 
