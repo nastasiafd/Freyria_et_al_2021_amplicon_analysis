@@ -1,12 +1,10 @@
-## Welcome to GitHub Pages
+# Illumina Miseq amplicon analysis (18S rRNA gene)
+This respository contains the pipeline code used to process raw amplicon sequences and the several steps to analyse data.
 
-You can use the [editor on GitHub](https://github.com/nastasiafd/SaveTheArcticPhytoplankton/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### Pre-requirement and installation
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Pipeline steps
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
 Syntax highlighted code block
