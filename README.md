@@ -29,16 +29,24 @@ Module load:
 ## Step 1: Quality control of raw reads from Miseq
 First, create a directory where all the `.R1.fastq`and `.R2.fastq` files will be together
 ```markdown
-mkdir illumina_reads
-cat *.R1.fastq *.R2.fastq > illumina_reads
+mkdir illumina_reads_control
+cat *.R1.fastq *.R2.fastq > illumina_reads_control/
 ```
 Then, check the quality of all reads with FASTQC
 ```rmarkdown
-fastqc --extract ~/patht/illumina_reads
+fastqc --extract ~/patht/illumina_reads_control/
 ```
-Then, rename all `.fastq` files to be the same. For example eplace all "_" and "-" by "."
+Then, rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
 ```markdown
+mkdir Fastq_processing
+mv *.R1.fastq *.R2.fastq Fastq_processing/
+for i in *.fastq; 
+  do mv $i $(echo $i | sed 's/\_/\./g'); 
+done
 
+for i in *.fastq; 
+  do mv $i $(echo $i | sed 's/\-/\./g'); 
+done
 ```
 
 
@@ -65,19 +73,6 @@ Then, rename all `.fastq` files to be the same. For example eplace all "_" and "
 Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/nastasiafd/SaveTheArcticPhytoplankton/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
 **Bold** and _Italic_ and `Code` text
-
 [Link](url) and ![Image](src)
 ```
