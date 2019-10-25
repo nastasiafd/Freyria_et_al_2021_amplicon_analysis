@@ -153,9 +153,14 @@ Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.htm
 python uc2otutab.py all_sequences.uc > all_sequences.otumap
 ```
 
-source ~/qiime_env/bin/activate
-        
-biom convert --table-type="OTU table" -i $name.otumap -o $name.biom --to-json
+Activate qiime environment to use qiime implented script
+Convert `.otumap` file to a `[.biom](http://biom-format.org/documentation/biom_conversion.html)` file
+Add atxanomy affiliation to each sequence
+Convert `.biom` file to a `.txt` file, so it will be easier to read on excel or else.
+
+```rmarkdown
+source ~/qiime_env/bin/activateeaser
+biom convert --table-type="OTU table" -i all_sequences.otumap -o OTU_table_all_seq.biom --to-json
 
 biom add-metadata --sc-separated taxonomy --observation-header OTUID,taxonomy --observation-metadata-fp $project_home/*.taxonomy -i $name.biom -o $name.taxonomy.biom
 
@@ -163,6 +168,7 @@ biom convert -i $name.taxonomy.biom -o $name.taxonomy.txt --to-tsv --header-key 
 
 biom summarize-table -i $name.taxonomy.biom > summarize.$name.taxonomy.txt #count number of sequences per sample
 ```
+
 
 
 
