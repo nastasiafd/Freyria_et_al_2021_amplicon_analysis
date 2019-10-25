@@ -118,18 +118,18 @@ usearch -cluster_smallmem all_sequences.otus100.sorted.fa -id 0.98 -centroids al
 Download silva v.132 database to assign taxonomy to OTU clustering. 
 Other database can ba use (e.g. [PR2 db](https://github.com/pr2database/pr2database)).
 `cutoff=`by default is 80.
-`probs=`is set to false for not having bootstrap values next to taxonomy
+`probs=`is set to false for not having bootstrap values next to taxonomy.
 
 ```rmarkdown
 mothur > classify.seqs(fasta=all_sequences.otu.fasta, reference=/path_to_silva_directory/silva.v.132.fna, taxonomy=path_to_silva_directory/silva.v.132.tax, cutoff=75, processors=24, probs=F)
 ```
 
 ## Step 8: OTUs mapping
-`-usearch_gloabl` file name of queries for global alignment search
-`-strand plus` cluster using plus strands
-`-uc` file name for [UCLUST](https://drive5.com/usearch/manual/uclust_algo.html)-like output
+`-usearch_gloabl` file name of queries for global alignment search.
+`-strand plus` cluster using plus strands.
+`-uc` file name for [UCLUST](https://drive5.com/usearch/manual/uclust_algo.html)-like output.
 `-maxhits` maximum number of hits to show.
-`-maxaccepts`number of hits to accept and show per strand
+`-maxaccepts`number of hits to accept and show per strand.
 
 ```rmarkdown
 grep -c ">" all_sequences.otu.fasta # gives a number of hit to accept (e.g. 20)
@@ -153,26 +153,55 @@ Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.htm
 python uc2otutab.py all_sequences.uc > all_sequences.otumap
 ```
 
-Activate qiime environment to use qiime implented script
-Convert `.otumap` file to a `[.biom](http://biom-format.org/documentation/biom_conversion.html)` file
-Add atxanomy affiliation to each sequence
+Activate qiime environment to use qiime implented script.
+Convert `.otumap` file to a `.biom` file.
+Add atxanomy affiliation to each sequence (taxonomy file is an output file from MOTHUR).
 Convert `.biom` file to a `.txt` file, so it will be easier to read on excel or else.
 
 ```rmarkdown
 source ~/qiime_env/bin/activateeaser
+
 biom convert --table-type="OTU table" -i all_sequences.otumap -o OTU_table_all_seq.biom --to-json
 
-biom add-metadata --sc-separated taxonomy --observation-header OTUID,taxonomy --observation-metadata-fp $project_home/*.taxonomy -i $name.biom -o $name.taxonomy.biom
+biom add-metadata --sc-separated Taxonomy --observation-header OTU_ID,Taxonomy --observation-metadata-fp *.taxonomy -i OTU_table_all_seq.biom -o OTU_table_all_seq_tax.biom
 
-biom convert -i $name.taxonomy.biom -o $name.taxonomy.txt --to-tsv --header-key taxonomy --table-type "OTU table"
-
-biom summarize-table -i $name.taxonomy.biom > summarize.$name.taxonomy.txt #count number of sequences per sample
+biom convert -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax.txt --to-tsv --header-key Taxonomy --table-type "OTU table"
 ```
 
+## Further analysis can be done to the OTU table
 
+In QIIME environment, we can:
+- filter OTU table from bigger organism like fungi and metazoan.
+- summarize OTU table to obtain the total number of sequence per sample. This is usueful if we want to rarefy the OTU table.
+- rarefaction to the lowest abundance in sample. 
+- summarize taxa to obtain relative abondance for each OTU at each taxonomy level (Kingdomm, class, order, phyllum, gender, species).
+- alpha diversity of rarefied and filtered OTU table
+- beta diversity of rarefied and filtered OTU table
+- [UPGMA](https://link.springer.com/referenceworkentry/10.1007/978-1-4020-6754-9_17806) cluster tree from rarefied and filtered OTU table
+- Number of shared OTU between samples (a Venn diagram can be done with the output file).
+- Ordination: PCA (principal components analysis)
+- Heatmap
 
+``rmarkdown
+filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax_filter.biom -n Metazoa
+filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax_filter.biom -o OTU_table_all_seq_tax_filter2.biom -n Fungi
 
-```markdown
-**Bold** and _Italic_ and `Code` text
-[Link](url) and ![Image](src)
+biom summarize-table -i OTU_table_all_seq_tax_filter2.biom > summarize.OTU_table_all_seq_tax_filter2.txt # check for the lowest abundance number (e.g. 15555)
+
+single_rarefaction.py -i OTU_table_all_seq_tax_filter2.biom -o OTU_table_all_seq_tax_filter_rarefied.biom -d 15555
+
+summarize_taxa.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o ./Taxonomy
+
+multiple_rarefactions_even_depth.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o rarefied_otu_tables_alpha_div/ -d 1000 -n 100
+alpha_diversity.py -i rarefied_otu_tables_alpha_div/ -m observed_species,simpson,shannon -o alpha_div_1000
+
+beta_diversity.py -i OTU_table_all_seq_tax_filter_rarefied.biom -m bray_curtis -o BC_beta_div_matrix_filter_rarefied/ #.txt file will be created
+
+upgma_cluster.py -i BC_beta_div_matrix_filter_rarefied/BC_beta_div_matrix_filter_rarefied.txt -o BC_beta_div_matrix_filter_rarefied.tre
+
+shared_phylotypes.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o shared_otus.txt
+
+principal_coordinates.py -i BC_beta_div_matrix_filter_rarefied/BC_beta_div_matrix_filter_rarefied.txt -o BC_beta_div_matrix_filter_rarefied/beta_div_coordinates.txt
+
+make_otu_heatmap.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o OTU_table_all_seq_tax_filter_rarefied.heatmap.pdf
 ```
