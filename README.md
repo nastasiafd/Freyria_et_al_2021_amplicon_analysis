@@ -1,10 +1,26 @@
 # Illumina Miseq amplicon analysis (18S rRNA gene)
 This respository contains the pipeline code used to process raw amplicon sequences and the several steps to analyse data.
 
-### Pre-requirement and installation
+## Pre-requirement and installation
 
-### Pipeline steps
+## Pipeline steps
+1. Quality reads of .fastq files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+2. Paired-end merging [(BBTOOLS)](https://jgi.doe.gov/data-and-tools/bbtools/)
+3. Dereplication [(VSEARCH)](https://github.com/torognes/vsearch)
+4. Size-sorting [(VSEARCH)](https://github.com/torognes/vsearch)
+5. Chimera checking [(USEARCH)](http://www.drive5.com/usearch/)
+6. OTUs clustering [(USEARCH)](http://www.drive5.com/usearch/)
+7. Taxonomic affiliation [(MOTHUR)](https://www.mothur.org/) with [Silva database](https://www.arb-silva.de/)
+8. OTUs mapping [(VSEARCH)](https://github.com/torognes/vsearch)
+9. OTUs table construction [(QIIME)](http://qiime.org/)
 
+
+
+
+
+
+### Jekyll Themes
+Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/nastasiafd/SaveTheArcticPhytoplankton/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ```markdown
 Syntax highlighted code block
@@ -23,13 +39,3 @@ Syntax highlighted code block
 
 [Link](url) and ![Image](src)
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/nastasiafd/SaveTheArcticPhytoplankton/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
