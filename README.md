@@ -26,7 +26,23 @@ Module load:
 8. OTUs mapping [(VSEARCH)](https://github.com/torognes/vsearch)
 9. OTUs table construction [(QIIME)](http://qiime.org/)
 
+## Step 1: Quality control of raw reads
 
+## Step 2: Paired-end merging
+
+## Step 3: Dereplication
+
+## Step 4: Size-sorting
+
+## Step 5: Chemira checking
+
+## Step 6: OTUs clustering
+
+## Step 7: Taxonomic affiliation 
+
+## Step 8: OTUs mapping
+
+## Step 9: OTUs table construction
 
 
 
