@@ -182,7 +182,7 @@ In QIIME environment, we can:
 - Ordination: PCA (principal components analysis)
 - Heatmap
 
-``rmarkdown
+```rmarkdown
 filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax_filter.biom -n Metazoa
 filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax_filter.biom -o OTU_table_all_seq_tax_filter2.biom -n Fungi
 
