@@ -4,17 +4,15 @@ It contains also several steps to analyse the final OTUs table.
 
 ## Pre-requirement and installation
 Module load:
-            fastqc
-            vsearch
-            bbmap
-            mothur
-            usearch
+- fastqc
+- vsearch
+- bbmap
+- mothur
+- usearch
 
- Download scripts: uc2otutab.py
+ Download scripts: [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html)
  
- Download eukaryota taxonomy database
- ref: 
- tax: 
+ Download eukaryota taxonomy database: [Silva v.132](https://www.arb-silva.de/no_cache/download/archive/release_132/Exports/)
 
 
 ## Pipeline steps
