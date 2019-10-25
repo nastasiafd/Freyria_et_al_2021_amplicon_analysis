@@ -48,6 +48,7 @@ Rename all `.fastq` files to be the same. For example replace all "_" and "-" by
 
 ```rmarkdown
 mkdir Fastq_processing
+
 mv *.R1.fastq *.R2.fastq Fastq_processing/
 
 for i in *.fastq; 
