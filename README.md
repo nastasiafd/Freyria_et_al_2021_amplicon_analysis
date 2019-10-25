@@ -10,6 +10,10 @@ Module load:
 - mothur
 - usearch
 
+Create an environment for:
+- qiime
+- python
+
  Download scripts: [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html)
  
  Download eukaryota taxonomy database: [Silva v.132](https://www.arb-silva.de/no_cache/download/archive/release_132/Exports/)
@@ -28,15 +32,20 @@ Module load:
 
 ## Step 1: Quality control of raw reads from Miseq
 First, create a directory where all the `.R1.fastq`and `.R2.fastq` files will be together
+
 ```markdown
 mkdir illumina_reads_control
 cat *.R1.fastq *.R2.fastq > illumina_reads_control/
 ```
+
 Then, check the quality of all reads with FASTQC
+
 ```rmarkdown
 fastqc --extract ~/patht/illumina_reads_control/
 ```
+
 Rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
+
 ```rmarkdown
 mkdir Fastq_processing
 mv *.R1.fastq *.R2.fastq Fastq_processing/
@@ -54,6 +63,7 @@ done
 Merge overlapping paired end reads into longer reads `in1=` reads 1 files, `in2=`reads 2 files and `out=`final merged file
 Filter fastq sequences based on number of expected error `-fastq_maxee`
 See https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmerge-guide/
+
 ```rmarkdown
 while read sample;
 do
@@ -63,66 +73,98 @@ done
 ```
 
 ## Step 3: Dereplication
+First concatenate all files `*.filtered.fa` to a signle file
+
+```rmarkdown
+cat *.filtered.fa > all_sequences.filtered.fa
+```
+
 Select representative sequence of several identical sequences and keep only one sequence (supress the others).
 `-minseqlength` minimum size of sequence to keep
+
 ```rmarkdown
-vsearch -derep_fulllength *.filtered.fa -output *.filtered.uniques.fa -sizeout -threads 8 -minseqlength 250
+vsearch -derep_fulllength all_sequences.filtered.fa -output all_sequences.filtered.uniques.fa -sizeout -minseqlength 250
 ```
 
 ## Step 4: Size-sorting
 `-minsize` minimum abundance of a sequence for sortbysize (suppress singleton)
+
 ```rmarkdown
-vsearch -sortbysize *.filtered.uniques.fa -output *.filtered.uniques.sort.fa -minsize 2
+vsearch -sortbysize all_sequences.filtered.uniques.fa -output all_sequences.filtered.uniques.sort.fa -minsize 2
 ````
 
 ## Step 5: Chemira checking
-Identification and correction of sequencing error and chimeras removing.
 `-minsize` specifies the minimum abundance. The default is 8, but for higher sensitivity, reducing `-minsize` to 4 is acceptable.
 All noisy sequences (with low-abundance) are mapped to a ZOTU by `-zotus` option.
+
 ```rmardown
-usearch -unoise3 *.filtered.uniques.sort.fa -zotus *.otus100.fa -minsize 4
+usearch -unoise3 all_sequences.filtered.uniques.sort.fa -zotus *all_sequences.otus100.fa -minsize 4
 ```
 
 Then, sort sequences by length
+
 ```rmardown
-usearch -sortbylength *.otus100.fa -fastaout *.otus100.sorted.fa
+usearch -sortbylength all_sequences.otus100.fa -fastaout all_sequences.otus100.sorted.fa
 ```
 
 ## Step 6: OTUs clustering
 For Eukaryota is better to use 98% level for clustering with`-id`option. (97% for Bacteria and Archaea).
+
 ```rmardown
-usearch -cluster_smallmem *.otus100.sorted.fa -id 0.98 -centroids *.otu.fasta -relabel OTU_
+usearch -cluster_smallmem all_sequences.otus100.sorted.fa -id 0.98 -centroids all_sequences.otu.fasta -relabel OTU_
 ```
 
 ## Step 7: Taxonomic affiliation 
-Download silva v.132 database to assign taxonomy to OTU clustering. Other database can ba use (e.g. [PR2 db](https://github.com/pr2database/pr2database))
-```rmarkdown
-ref=/path_to_silva_directory/silva.v.132.fna
-tax=/path_to_silva_directory/silva.v.132.tax
-cpu=24
+Download silva v.132 database to assign taxonomy to OTU clustering. 
+Other database can ba use (e.g. [PR2 db](https://github.com/pr2database/pr2database)).
+`cutoff=`by default is 80.
+`probs=`is set to false for not having bootstrap values next to taxonomy
 
-mothur "#classify.seqs(fasta=*.otu.fasta, reference=$ref, taxonomy=$tax, cutoff=75, processors=$cpu, probs=F)"
+```rmarkdown
+mothur > classify.seqs(fasta=all_sequences.otu.fasta, reference=/path_to_silva_directory/silva.v.132.fna, taxonomy=path_to_silva_directory/silva.v.132.tax, cutoff=75, processors=24, probs=F)
 ```
 
 ## Step 8: OTUs mapping
+`-usearch_gloabl` file name of queries for global alignment search
+`-strand plus` cluster using plus strands
+`-uc` file name for [UCLUST](https://drive5.com/usearch/manual/uclust_algo.html)-like output
+`-maxhits` maximum number of hits to show.
+`-maxaccepts`number of hits to accept and show per strand
 
 ```rmarkdown
-max=$(grep -c ">" *.otu.fasta)
-SAMPLE_FILES=$(ls *.filtered.fa)
+grep -c ">" all_sequences.otu.fasta # gives a number of hit to accept (e.g. 20)
+SAMPLE_FILES=$(ls *.filtered.fa) # all merged files from step 2
 
 for SAMPLE in $SAMPLE_FILES;
 do
- vsearch -usearch_global $SAMPLE -db *.otu.fasta -strand plus -id 0.98 -uc $SAMPLE.uc -maxhits 1 -maxaccepts 20 -threads 0;
+ vsearch -usearch_global $SAMPLE -db all_sequences.otu.fasta -strand plus -id 0.98 -uc $SAMPLE.uc -maxhits 1 -maxaccepts 20;
 done
 ```
 
 ## Step 9: OTUs table construction
+First, concatenate all `.uc` file to a single file
+
+```rmarkdown
+cat *.uc > all_sequences.uc
+````
+
+Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html) to transform `.uc`to otu table 
+```rmardown
+python uc2otutab.py all_sequences.uc > all_sequences.otumap
+```
+
+source ~/qiime_env/bin/activate
+        
+biom convert --table-type="OTU table" -i $name.otumap -o $name.biom --to-json
+
+biom add-metadata --sc-separated taxonomy --observation-header OTUID,taxonomy --observation-metadata-fp $project_home/*.taxonomy -i $name.biom -o $name.taxonomy.biom
+
+biom convert -i $name.taxonomy.biom -o $name.taxonomy.txt --to-tsv --header-key taxonomy --table-type "OTU table"
+
+biom summarize-table -i $name.taxonomy.biom > summarize.$name.taxonomy.txt #count number of sequences per sample
+```
 
 
-
-
-### Jekyll Themes
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/nastasiafd/SaveTheArcticPhytoplankton/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ```markdown
 **Bold** and _Italic_ and `Code` text
