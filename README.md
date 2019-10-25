@@ -1,7 +1,21 @@
 # Illumina Miseq amplicon analysis (18S rRNA gene)
-This respository contains the pipeline code used to process raw amplicon sequences and the several steps to analyse data.
+This respository contains the pipeline code used to process raw amplicon sequences. 
+It contains also several steps to analyse the final OTUs table.
 
 ## Pre-requirement and installation
+Module load:
+            fastqc
+            vsearch
+            bbmap
+            mothur
+            usearch
+
+ Download scripts: uc2otutab.py
+ 
+ Download eukaryota taxonomy database
+ ref: 
+ tax: 
+
 
 ## Pipeline steps
 1. Quality reads of `.fastq` files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
