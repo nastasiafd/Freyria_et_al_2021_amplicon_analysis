@@ -26,13 +26,27 @@ Module load:
 8. OTUs mapping [(VSEARCH)](https://github.com/torognes/vsearch)
 9. OTUs table construction [(QIIME)](http://qiime.org/)
 
-### Step 1: Quality control of raw reads
+## Step 1: Quality control of raw reads from Miseq
+First, create a directory where all the `.R1.fastq`and `.R2.fastq` files will be together
+```markdown
+mkdir illumina_reads
+cat *.R1.fastq *.R2.fastq > illumina_reads
+```
+Then, check the quality of all reads with FASTQC
+```rmarkdown
+fastqc --extract ~/patht/illumina_reads
+```
+Then, rename all `.fastq` files to be the same. For example eplace all "_" and "-" by "."
+```markdown
 
-### Step 2: Paired-end merging
+```
 
-### Step 3: Dereplication
 
-### Step 4: Size-sorting
+## Step 2: Paired-end merging
+
+## Step 3: Dereplication
+
+## Step 4: Size-sorting
 
 ## Step 5: Chemira checking
 
