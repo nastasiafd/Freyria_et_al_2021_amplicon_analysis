@@ -4,7 +4,7 @@ This respository contains the pipeline code used to process raw amplicon sequenc
 ## Pre-requirement and installation
 
 ## Pipeline steps
-1. Quality reads of .fastq files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+1. Quality reads of `.fastq` files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 2. Paired-end merging [(BBTOOLS)](https://jgi.doe.gov/data-and-tools/bbtools/)
 3. Dereplication [(VSEARCH)](https://github.com/torognes/vsearch)
 4. Size-sorting [(VSEARCH)](https://github.com/torognes/vsearch)
