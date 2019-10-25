@@ -159,7 +159,7 @@ First, concatenate all `.uc` file to a single file
 
 ```rmarkdown
 cat *.uc > all_sequences.uc
-````
+```
 
 Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html) to transform `.uc`to otu table 
 
