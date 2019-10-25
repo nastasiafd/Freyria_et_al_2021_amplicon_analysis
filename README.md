@@ -60,8 +60,12 @@ done
 ```
 
 ## Step 2: Paired-end merging
-Merge overlapping paired end reads into longer reads `in1=` reads 1 files, `in2=`reads 2 files and `out=`final merged file
+Merge overlapping paired end reads into longer reads.
+
+`in1=` reads 1 files, `in2=`reads 2 files and `out=`final merged file.
+
 Filter fastq sequences based on number of expected error `-fastq_maxee`
+
 See https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmerge-guide/
 
 ```rmarkdown
