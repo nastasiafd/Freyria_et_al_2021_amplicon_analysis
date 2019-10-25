@@ -36,7 +36,7 @@ Then, check the quality of all reads with FASTQC
 ```rmarkdown
 fastqc --extract ~/patht/illumina_reads_control/
 ```
-Then, rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
+Rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
 ```markdown
 mkdir Fastq_processing
 mv *.R1.fastq *.R2.fastq Fastq_processing/
@@ -49,12 +49,31 @@ for i in *.fastq;
 done
 ```
 
-
 ## Step 2: Paired-end merging
+Merge overlapping paired end reads into longer reads `in1=` reads 1 files, `in2=`reads 2 files and `out=`final merged file
+Filter fastq sequences based on number of expected error `-fastq_maxee`
+See https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmerge-guide/
+```rmarkdown
+name=
+while read sample;
+ do
+  bbmerge.sh in1=$sample.R1.fastq in2=$sample.R2.fastq out=$sample.merged.fq
+  vsearch --fastq_filter $sample.merged.fq -fastaout $sample.filtered.fa -fastq_maxee 0.5
+done
+```
 
 ## Step 3: Dereplication
+Select representative sequence of several identical sequences and keep only one sequence (supress the others).
+`-minseqlength` minimum size of sequence to keep
+```rmarkdown
+vsearch -derep_fulllength $name.filtered.fa -output $name.filtered.uniques.fa -sizeout -threads 8 -minseqlength 250
+```
 
 ## Step 4: Size-sorting
+
+```rmarkdown
+vsearch -sortbysize $name.filtered.trim.label.uniques.fasta -output $name.filtered.trim.label.uniques.sort.fasta -minsize 2
+````
 
 ## Step 5: Chemira checking
 
