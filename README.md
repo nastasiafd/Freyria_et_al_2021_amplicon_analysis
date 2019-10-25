@@ -37,15 +37,16 @@ Then, check the quality of all reads with FASTQC
 fastqc --extract ~/patht/illumina_reads_control/
 ```
 Rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
-```markdown
+```rmarkdown
 mkdir Fastq_processing
 mv *.R1.fastq *.R2.fastq Fastq_processing/
+
 for i in *.fastq; 
-  do mv $i $(echo $i | sed 's/\_/\./g'); 
+do mv $i $(echo $i | sed 's/\_/\./g'); 
 done
 
 for i in *.fastq; 
-  do mv $i $(echo $i | sed 's/\-/\./g'); 
+do mv $i $(echo $i | sed 's/\-/\./g'); 
 done
 ```
 
@@ -54,11 +55,10 @@ Merge overlapping paired end reads into longer reads `in1=` reads 1 files, `in2=
 Filter fastq sequences based on number of expected error `-fastq_maxee`
 See https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmerge-guide/
 ```rmarkdown
-name=
 while read sample;
- do
-  bbmerge.sh in1=$sample.R1.fastq in2=$sample.R2.fastq out=$sample.merged.fq
-  vsearch --fastq_filter $sample.merged.fq -fastaout $sample.filtered.fa -fastq_maxee 0.5
+do
+ bbmerge.sh in1=$sample.R1.fastq in2=$sample.R2.fastq out=$sample.merged.fq
+ vsearch --fastq_filter $sample.merged.fq -fastaout $sample.filtered.fa -fastq_maxee 0.5;
 done
 ```
 
@@ -66,22 +66,55 @@ done
 Select representative sequence of several identical sequences and keep only one sequence (supress the others).
 `-minseqlength` minimum size of sequence to keep
 ```rmarkdown
-vsearch -derep_fulllength $name.filtered.fa -output $name.filtered.uniques.fa -sizeout -threads 8 -minseqlength 250
+vsearch -derep_fulllength *.filtered.fa -output *.filtered.uniques.fa -sizeout -threads 8 -minseqlength 250
 ```
 
 ## Step 4: Size-sorting
-
+`-minsize` minimum abundance of a sequence for sortbysize (suppress singleton)
 ```rmarkdown
-vsearch -sortbysize $name.filtered.trim.label.uniques.fasta -output $name.filtered.trim.label.uniques.sort.fasta -minsize 2
+vsearch -sortbysize *.filtered.uniques.fa -output *.filtered.uniques.sort.fa -minsize 2
 ````
 
 ## Step 5: Chemira checking
+Identification and correction of sequencing error and chimeras removing.
+`-minsize` specifies the minimum abundance. The default is 8, but for higher sensitivity, reducing `-minsize` to 4 is acceptable.
+All noisy sequences (with low-abundance) are mapped to a ZOTU by `-zotus` option.
+```rmardown
+usearch -unoise3 *.filtered.uniques.sort.fa -zotus *.otus100.fa -minsize 4
+```
+
+Then, sort sequences by length
+```rmardown
+usearch -sortbylength *.otus100.fa -fastaout *.otus100.sorted.fa
+```
 
 ## Step 6: OTUs clustering
+For Eukaryota is better to use 98% level for clustering with`-id`option. (97% for Bacteria and Archaea).
+```rmardown
+usearch -cluster_smallmem *.otus100.sorted.fa -id 0.98 -centroids *.otu.fasta -relabel OTU_
+```
 
 ## Step 7: Taxonomic affiliation 
+Download silva v.132 database to assign taxonomy to OTU clustering. Other database can ba use (e.g. [PR2 db](https://github.com/pr2database/pr2database))
+```rmarkdown
+ref=/path_to_silva_directory/silva.v.132.fna
+tax=/path_to_silva_directory/silva.v.132.tax
+cpu=24
+
+mothur "#classify.seqs(fasta=*.otu.fasta, reference=$ref, taxonomy=$tax, cutoff=75, processors=$cpu, probs=F)"
+```
 
 ## Step 8: OTUs mapping
+
+```rmarkdown
+max=$(grep -c ">" *.otu.fasta)
+SAMPLE_FILES=$(ls *.filtered.fa)
+
+for SAMPLE in $SAMPLE_FILES;
+do
+ vsearch -usearch_global $SAMPLE -db *.otu.fasta -strand plus -id 0.98 -uc $SAMPLE.uc -maxhits 1 -maxaccepts 20 -threads 0;
+done
+```
 
 ## Step 9: OTUs table construction
 
