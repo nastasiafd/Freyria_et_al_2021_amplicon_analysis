@@ -274,16 +274,16 @@ Ph.D. student in oceanography
 ## References
 Bushnell, B. 2014. "BBTools software package."  URL http://sourceforge. net/projects/bbmap.
 
-Caporaso, J Gregory, Justin Kuczynski, Jesse Stombaugh, Kyle Bittinger, Frederic D Bushman, Elizabeth K Costello, Noah Fierer, Antonio Gonzalez Pena, Julia K Goodrich, and Jeffrey I Gordon. 2010. "QIIME allows analysis of high-throughput community sequencing data."  Nature methods 7 (5):335.
+Caporaso, J. G., Kuczynski, J., Stombaugh, J., Bittinger, K., Bushman, F. D., Costello, E. K., ... & Huttley, G. A. (2010). QIIME allows analysis of high-throughput community sequencing data. Nature methods, 7(5), 335. [doi: 10.1038/nmeth.f.303](https://doi.org/10.1038/nmeth.f.303)
 
-Edgar, Robert C. 2004. "MUSCLE: multiple sequence alignment with high accuracy and high throughput."  Nucleic acids research 32 (5):1792-1797.
+Edgar, Robert C. 2004. "MUSCLE: multiple sequence alignment with high accuracy and high throughput."  Nucleic acids research 32 (5):1792-1797. [doi: 10.1093/nar/gkh340](https://doi.org/10.1093/nar/gkh340)
 
-Guillou, L., D. Bachar, S. Audic, D. Bass, C. Berney, L. Bittner, C. Boutte, G. Burgaud, C. de Vargas, J. Decelle, J. Del Campo, J. R. Dolan, M. Dunthorn, B. Edvardsen, M. Holzmann, W. H. Kooistra, E. Lara, N. Le Bescot, R. Logares, F. Mahé, R. Massana, M. Montresor, R. Morard, F. Not, J. Pawlowski, I. Probert, A. L. Sauvadet, R. Siano, T. Stoeck, D. Vaulot, P. Zimmermann, and R. Christen. 2013. "The Protist Ribosomal Reference database (PR2): a catalog of unicellular eukaryote small sub-unit rRNA sequences with curated taxonomy."  Nucleic Acids Res 41 (Database issue):D597-604. doi: 10.1093/nar/gks1160.
+Guillou, L., Bachar, D., Audic, S., Bass, D., Berney, C., Bittner, L., ... & del Campo, J. (2012). The Protist Ribosomal Reference database (PR2): a catalog of unicellular eukaryote small sub-unit rRNA sequences with curated taxonomy. Nucleic acids research, 41(D1), D597-D604. [doi: 10.1093/nar/gks1160](https://doi.org/10.1093/nar/gks1160)
 
-Price, MN, PS Dehal, and AP Arkin. 2010. "FastTree 2–Approximately Maximum-Likelihood Trees for Large Alignments."  PLoS ONE 5 (3):e9490.
+Price, MN, PS Dehal, and AP Arkin. 2010. "FastTree 2–Approximately Maximum-Likelihood Trees for Large Alignments."  PLoS ONE 5 (3):e9490. [doi: 10.1371/journal.pone.0009490](https://doi.org/10.1371/journal.pone.0009490)
 
-Quast, Christian, Elmar Pruesse, Pelin Yilmaz, Jan Gerken, Timmy Schweer, Pablo Yarza, Jörg Peplies, and Frank Oliver Glöckner. 2012. "The SILVA ribosomal RNA gene database project: improved data processing and web-based tools."  Nucleic acids research 41 (D1):D590-D596.
+Quast, Christian, Elmar Pruesse, Pelin Yilmaz, Jan Gerken, Timmy Schweer, Pablo Yarza, Jörg Peplies, and Frank Oliver Glöckner. 2012. "The SILVA ribosomal RNA gene database project: improved data processing and web-based tools."  Nucleic acids research 41 (D1):D590-D596. [doi: 10.1093/nar/gks1219](https://doi.org/10.1093/nar/gks1219)
 
-Rognes, Torbjørn, Tomáš Flouri, Ben Nichols, Christopher Quince, and Frédéric Mahé. 2016. "VSEARCH: a versatile open source tool for metagenomics."  PeerJ 4:e2584. doi: 10.7717/peerj.2584.
+Rognes, T., Flouri, T., Nichols, B., Quince, C., & Mahé, F. (2016). VSEARCH: a versatile open source tool for metagenomics. PeerJ, 4, e2584. [doi: 10.7717/peerj.2584](https://dx.doi.org/10.7717%2Fpeerj.2584)
 
-Schloss, Patrick D, Sarah L Westcott, Thomas Ryabin, Justine R Hall, Martin Hartmann, Emily B Hollister, Ryan A Lesniewski, Brian B Oakley, Donovan H Parks, and Courtney J Robinson. 2009. "Introducing mothur: open-source, platform-independent, community-supported software for describing and comparing microbial communities."  Applied and environmental microbiology 75 (23):7537-7541.
+Schloss, P. D., Westcott, S. L., Ryabin, T., Hall, J. R., Hartmann, M., Hollister, E. B., ... & Sahl, J. W. (2009). Introducing mothur: open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl. Environ. Microbiol., 75(23), 7537-7541. [doi: 10.1128/AEM.01541-09](https://aem.asm.org/content/75/23/7537.short)
