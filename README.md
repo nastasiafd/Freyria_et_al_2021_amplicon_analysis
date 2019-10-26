@@ -261,7 +261,7 @@ make_otu_heatmap.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o OTU_table_a
 
 ```
 
-## Contacts
+## Contact
 
 **Nastasia J. Freyria**
 
