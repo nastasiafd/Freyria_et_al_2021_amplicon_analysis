@@ -3,7 +3,7 @@ This respository contains the pipeline code used to process raw amplicon sequenc
 It contains also several steps to analyse the final OTUs table.
 
 ## Pre-requirement and installation
-Module load:
+Modules load:
 - fastqc
 - vsearch
 - bbmap
@@ -14,13 +14,13 @@ Create an environment for:
 - qiime
 - python
 
- Download scripts: [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html)
+ Download script: [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html)
  
  Download eukaryota taxonomy database: [Silva v.132](https://www.arb-silva.de/no_cache/download/archive/release_132/Exports/)
 
 
 ## Pipeline steps
-1. Quality reads of `.fastq` files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+1. Quality control of reads from `.fastq` files [(FASTQC)](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 2. Paired-end merging [(BBTOOLS)](https://jgi.doe.gov/data-and-tools/bbtools/)
 3. Dereplication [(VSEARCH)](https://github.com/torognes/vsearch)
 4. Size-sorting [(VSEARCH)](https://github.com/torognes/vsearch)
@@ -44,7 +44,7 @@ Then, check the quality of all reads with FASTQC
 fastqc --extract ~/patht/illumina_reads_control/
 ```
 
-Rename all `.fastq` files to be the same. For example replace all "_" and "-" by "."
+Rename all `.fastq` files to be the same. For example, replace all "_" and "-" by "."
 
 ```rmarkdown
 mkdir Fastq_processing
@@ -61,13 +61,13 @@ done
 ```
 
 ## Step 2: Paired-end merging
-Merge overlapping paired end reads into longer reads.
+Merge overlapping paired end reads into longer reads (BBMERGE).
 
 `in1=` reads 1 files, `in2=`reads 2 files and `out=`final merged file.
 
-Filter fastq sequences based on number of expected error `-fastq_maxee`
-
 See https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmerge-guide/
+
+Filter fastq sequences based on number of expected error `-fastq_maxee` (VSEARCH).
 
 ```rmarkdown
 while read sample;
@@ -78,13 +78,13 @@ done
 ```
 
 ## Step 3: Dereplication
-First concatenate all files `*.filtered.fa` to a signle file
+First, concatenate all files `*.filtered.fa` to a single one.
 
 ```rmarkdown
 cat *.filtered.fa > all_sequences.filtered.fa
 ```
 
-Select representative sequence of several identical sequences and keep only one sequence (supress the others).
+Then, select a representative sequence of several identical sequences and keep only one sequence (supress the others).
 
 `-minseqlength` minimum size of sequence to keep
 
@@ -93,7 +93,7 @@ vsearch -derep_fulllength all_sequences.filtered.fa -output all_sequences.filter
 ```
 
 ## Step 4: Size-sorting
-`-minsize` minimum abundance of a sequence for sortbysize (suppress singleton)
+`-minsize` minimum abundance of a sequence for sortbysize (supress singleton)
 
 ```rmarkdown
 vsearch -sortbysize all_sequences.filtered.uniques.fa -output all_sequences.filtered.uniques.sort.fa -minsize 2
@@ -115,26 +115,32 @@ usearch -sortbylength all_sequences.otus100.fa -fastaout all_sequences.otus100.s
 ```
 
 ## Step 6: OTUs clustering
-For Eukaryota is better to use 98% level for clustering with`-id`option. (97% for Bacteria and Archaea).
+For Eukaryota is better to use 98% level for clustering with `-id` option. (97% for Bacteria and Archaea).
 
 ```rmarkdown
 usearch -cluster_smallmem all_sequences.otus100.sorted.fa -id 0.98 -centroids all_sequences.otu.fasta -relabel OTU_
 ```
 
 ## Step 7: Taxonomic affiliation 
-Download silva v.132 database to assign taxonomy to OTU clustering. 
+Download [Silva v.132](https://www.arb-silva.de/no_cache/download/archive/release_132/Exports/) database to assign taxonomy to OTU clustering. 
 
 Other database can ba use (e.g. [PR2 db](https://github.com/pr2database/pr2database)).
 
-`cutoff=`by default is 80.
+`cutoff=` by default is 80.
 
-`probs=`is set to false for not having bootstrap values next to taxonomy.
+`probs=` is set to false for not having bootstrap values next to taxonomy.
 
 ```rmarkdown
 mothur > classify.seqs(fasta=all_sequences.otu.fasta, reference=/path_to_silva_directory/silva.v.132.fna, taxonomy=path_to_silva_directory/silva.v.132.tax, cutoff=75, processors=24, probs=F)
 ```
 
 ## Step 8: OTUs mapping
+First, let's count the number of hits from otu.fasta file
+
+```rmarkdown
+grep -c ">" all_sequences.otu.fasta # gives a number of hit to accept for vsearch command (e.g. 20)
+```
+
 `-usearch_gloabl` file name of queries for global alignment search.
 
 `-strand plus` cluster using plus strands.
@@ -143,10 +149,9 @@ mothur > classify.seqs(fasta=all_sequences.otu.fasta, reference=/path_to_silva_d
 
 `-maxhits` maximum number of hits to show.
 
-`-maxaccepts`number of hits to accept and show per strand.
+`-maxaccepts` number of hits to accept and show per strand.
 
 ```rmarkdown
-grep -c ">" all_sequences.otu.fasta # gives a number of hit to accept (e.g. 20)
 SAMPLE_FILES=$(ls *.filtered.fa) # all merged files from step 2
 
 for SAMPLE in $SAMPLE_FILES;
@@ -156,23 +161,23 @@ done
 ```
 
 ## Step 9: OTUs table construction
-First, concatenate all `.uc` file to a single file
+First, concatenate all `.uc` file to a single one
 
 ```rmarkdown
 cat *.uc > all_sequences.uc
 ```
 
-Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html) to transform `.uc`to otu table 
+Download python script [uc2otutab.py](https://drive5.com/python/uc2otutab_py.html) to transform `.uc` to OTU table 
 
 ```rmarkdown
 python uc2otutab.py all_sequences.uc > all_sequences.otumap
 ```
 
-Activate qiime environment to use qiime implented script.
+Activate qiime environment to use implented scripts.
 
-Convert `.otumap` file to a `.biom` file.
+Then, convert `.otumap` file to a `.biom` file.
 
-Add atxanomy affiliation to each sequence (taxonomy file is an output file from MOTHUR).
+Add taxonomy affiliation to each sequence (taxonomy file is an output file from MOTHUR).
 
 Convert `.biom` file to a `.txt` file, so it will be easier to read on excel or else.
 
@@ -187,8 +192,8 @@ biom convert -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax.txt --to-tsv
 ```
 
 ## Further analysis can be done to the OTU table
-
 In QIIME environment, we can:
+
 - filter OTU table from bigger organism like fungi and metazoan.
 
 ```rmarkdown
@@ -255,3 +260,15 @@ principal_coordinates.py -i BC_beta_div_matrix_filter_rarefied/BC_beta_div_matri
 make_otu_heatmap.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o OTU_table_all_seq_tax_filter_rarefied.heatmap.pdf
 
 ```
+
+## Contacts
+
+**Nastasia J. Freyria**
+
+Ph.D. student in oceanography
+
+[Laval University](https://www.ulaval.ca/), at [IBIS](http://www.ibis.ulaval.ca/) 
+
+[ResearchGate](https://www.researchgate.net/profile/Nastasia_Freyria) | [Linkedin](https://ca.linkedin.com/in/nastasia-j-freyria-2a194a114) | [Twitter](https://twitter.com/FreyriaNastasia)
+
+## References
