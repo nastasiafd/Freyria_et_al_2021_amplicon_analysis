@@ -194,33 +194,33 @@ biom convert -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax.txt --to-tsv
 ## Further analysis can be done to the OTU table
 In QIIME environment, we can:
 
-- filter OTU table from bigger organism like fungi and metazoan.
+- FILTER OTU table from bigger organism like fungi and metazoan.
 
 ```rmarkdown
 filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax.biom -o OTU_table_all_seq_tax_filter.biom -n Metazoa
 filter_taxa_from_otu_table.py -i OTU_table_all_seq_tax_filter.biom -o OTU_table_all_seq_tax_filter2.biom -n Fungi
 ```
 
-- summarize OTU table to obtain the total number of sequence per sample. This is usueful if we want to rarefy the OTU table.
+- SUMMARIZE OTU table to obtain the total number of sequence per sample. This is usueful if we want to rarefy the OTU table.
 
 ```rmarkdown
 biom summarize-table -i OTU_table_all_seq_tax_filter2.biom > summarize.OTU_table_all_seq_tax_filter2.txt # check for the lowest abundance number (e.g. 15555)
 ```
 
-- rarefaction to the lowest abundance in sample. 
+- RAREFACTION to the lowest abundance in sample. 
 
 ```rmarkdown
 single_rarefaction.py -i OTU_table_all_seq_tax_filter2.biom -o OTU_table_all_seq_tax_filter_rarefied.biom -d 15555
 ```
 
-- summarize taxa to obtain relative abondance for each OTU at each taxonomy level (Kingdomm, class, order, phyllum, gender, species).
+- SUMMARIZE TAXA to obtain relative abondance for each OTU at each taxonomy level (Kingdomm, class, order, phyllum, gender, species).
 
 ```rmarkdown
 summarize_taxa.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o ./Taxonomy
 
 ```
 
-- alpha diversity of rarefied and filtered OTU table
+- ALPHA DIVERSITY of rarefied and filtered OTU table
 
 ```rmarkdown
 multiple_rarefactions_even_depth.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o rarefied_otu_tables_alpha_div/ -d 1000 -n 100
@@ -228,7 +228,7 @@ multiple_rarefactions_even_depth.py -i OTU_table_all_seq_tax_filter_rarefied.bio
 alpha_diversity.py -i rarefied_otu_tables_alpha_div/ -m observed_species,simpson,shannon -o alpha_div_1000
 ```
 
-- beta diversity of rarefied and filtered OTU table
+- BETA DIVERSITY of rarefied and filtered OTU table
 
 ```rmarkdown
 beta_diversity.py -i OTU_table_all_seq_tax_filter_rarefied.biom -m bray_curtis -o BC_beta_div_matrix_filter_rarefied/ #.txt file will be created
@@ -241,20 +241,20 @@ upgma_cluster.py -i BC_beta_div_matrix_filter_rarefied/BC_beta_div_matrix_filter
 
 ```
 
-- Number of shared OTU between samples (a Venn diagram can be done with the output file).
+- NUMBER OF SHARED OTU between samples (a Venn diagram can be done with the output file).
 
 ```rmarkdown
 shared_phylotypes.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o shared_otus.txt
 
 ```
 
-- Ordination: PCA (principal components analysis)
+- ORDINATION: PCA (principal components analysis)
 
 ```rmarkdown
 principal_coordinates.py -i BC_beta_div_matrix_filter_rarefied/BC_beta_div_matrix_filter_rarefied.txt -o BC_beta_div_matrix_filter_rarefied/beta_div_coordinates.txt
 ```
 
-- Heatmap
+- HEATMAP
 
 ```rmarkdown
 make_otu_heatmap.py -i OTU_table_all_seq_tax_filter_rarefied.biom -o OTU_table_all_seq_tax_filter_rarefied.heatmap.pdf
