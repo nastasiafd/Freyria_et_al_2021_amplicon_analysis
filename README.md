@@ -1,3 +1,10 @@
+# Freyria_et_al_2021
+
+Scripts for "**A decadal perspective on north water microbial eukaryotes as Arctic Ocean sentinels**" 
+by **Nastasia J. Freyria, Nathalie Joli and Connie Lovejoy**.
+
+DOI: https://doi.org/10.1038/s41598-021-87906-4
+
 # Illumina Miseq amplicon analysis (18S rRNA gene)
 This respository contains the pipeline code used to process raw amplicon sequences. 
 It contains also several steps to analyse the final OTUs table.
