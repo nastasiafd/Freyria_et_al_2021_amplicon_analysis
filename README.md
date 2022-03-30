@@ -1,4 +1,4 @@
-# Freyria_et_al_2021
+# Freyria et al., 2021 - Scientific Reports
 
 Scripts for "**A decadal perspective on north water microbial eukaryotes as Arctic Ocean sentinels**" 
 by **Nastasia J. Freyria, Nathalie Joli and Connie Lovejoy**.
