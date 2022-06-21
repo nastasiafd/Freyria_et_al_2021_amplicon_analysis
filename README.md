@@ -189,7 +189,7 @@ Add taxonomy affiliation to each sequence (taxonomy file is an output file from 
 Convert `.biom` file to a `.txt` file, so it will be easier to read on excel or else.
 
 ```rmarkdown
-source ~/qiime_env/bin/activateeaser
+source ~/qiime_env/bin/activate
 
 biom convert --table-type="OTU table" -i all_sequences.otumap -o OTU_table_all_seq.biom --to-json
 
